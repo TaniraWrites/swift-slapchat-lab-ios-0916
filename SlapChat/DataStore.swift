@@ -11,9 +11,58 @@ import CoreData
 
 class DataStore {
     
+    var messageArray = [Message]()
+    
+    
+    
     static let sharedInstance = DataStore()
     
+    
     private init() {}
+    
+    
+    func generateTestData(){
+        
+        var managedContext = self.persistentContainer.viewContext
+        let friendlyEntity = NSEntityDescription.insertNewObject(forEntityName: "Message", into: managedContext) as! Message
+        let unfriendlyEntity = NSEntityDescription.insertNewObject(forEntityName: "Message", into: managedContext) as! Message
+        
+        
+        
+        friendlyEntity.content = "Hey what are my options for leaving America?"
+        friendlyEntity.createdAt = NSDate()
+        
+        
+        
+        
+        
+        unfriendlyEntity.content = "Get out of here, this is 'MURICAAAA!"
+        unfriendlyEntity.createdAt = NSDate()
+        saveContext()
+        
+    }
+    
+    func fetchData() {
+        let managedContext = self.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<Message>(entityName: "Message")
+    // alternative fetchRequest: let fetchRequest2<Message> = Message.fetchRequest()
+        do{
+            self.messageArray = try managedContext.fetch(fetchRequest)
+//messageArray.sorted(by: {( Message1, Message2 )
+            self.messageArray.sort(by: {$0.createdAt?.compare($1.createdAt as! Date) == .orderedAscending})
+            //$0.createdDate?.compare($1.createdDate as! Date) == .orderedAscending })
+            if messageArray.count == 0 {
+                generateTestData()
+                fetchData()
+            }
+            
+        }catch {
+         
+            print("error fetching")
+        }
+        
+    }
+    
     
     // MARK: - Core Data stack
     
@@ -60,4 +109,7 @@ class DataStore {
         }
     }
     
+ 
 }
+
+
