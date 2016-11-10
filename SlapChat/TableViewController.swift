@@ -15,13 +15,13 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         store.fetchData()
-        print(store.messageArray)
+      //  print(store.messageArray)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        print("stop")
+        //print("stop")
     }
     
     //  let friendlyMessage = NSEntityDescription.insertNewObject(forEntityName: "friendly", into: NSManagedObjectContext) as! Message
@@ -42,8 +42,13 @@ class TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath)
         let text = store.messageArray[indexPath.row]
+        
         cell.detailTextLabel?.text = store.messageArray[indexPath.row].content
-        cell.textLabel?.text = String(describing: store.messageArray[indexPath.row].createdAt)
+        
+        if let createdAtText = store.messageArray[indexPath.row].createdAt {
+                    cell.textLabel?.text = String(describing: createdAtText)
+        }
+        
         return cell
     }
 }
